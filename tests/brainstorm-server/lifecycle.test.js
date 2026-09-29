@@ -112,11 +112,11 @@ function removeShellPath(p) {
 function newestSessionDir(projectDir) {
   const sessionDir = execFileSync('bash', [
     '-lc',
-    'find "$1/.superpowers/brainstorm" -mindepth 1 -maxdepth 1 -type d -print | sort | tail -1',
+    'find "$1/.superbrainstorming/brainstorm" -mindepth 1 -maxdepth 1 -type d -print | sort | tail -1',
     'bash',
     projectDir
   ], { encoding: 'utf8' }).trim();
-  assert(sessionDir, `expected at least one session dir under ${projectDir}/.superpowers/brainstorm`);
+  assert(sessionDir, `expected at least one session dir under ${projectDir}/.superbrainstorming/brainstorm`);
   return sessionDir;
 }
 

@@ -1,19 +1,18 @@
 {
-  "name": "superpowers-dev",
-  "description": "Development marketplace for Superpowers core skills library",
+  "name": "superbrainstorming",
+  "description": "Marketplace for the Superbrainstorming plugin",
   "owner": {
-    "name": "Jesse Vincent",
-    "email": "jesse@fsck.com"
+    "name": "Harry Munro",
+    "email": "harry.j.munro@gmail.com"
   },
   "plugins": [
     {
-      "name": "superpowers",
-      "description": "Core skills library for Claude Code: TDD, debugging, collaboration patterns, and proven techniques",
-      "version": "6.4.2",
+      "name": "superbrainstorming",
+      "description": "Brainstorm the design with your human partner, get approval, then build it. The brainstorming step from Superpowers, without the planning and execution machinery.",
       "source": "./",
       "author": {
-        "name": "Jesse Vincent",
-        "email": "jesse@fsck.com"
+        "name": "Harry Munro",
+        "email": "harry.j.munro@gmail.com"
       }
     }
   ]

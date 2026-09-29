@@ -1,15 +1,16 @@
 ---
 name: brainstorming
-description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation."
+description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design, gets approval, then implements the approved design."
 ---
 
-# Brainstorming Ideas Into Designs
+# Brainstorming Ideas Into Designs, Then Building Them
 
-Help turn ideas into fully formed designs and specs through natural collaborative dialogue.
+Help turn ideas into fully formed designs through natural collaborative
+dialogue, then build what was agreed.
 
 Start by classifying how much process the request needs, then work
 through your path: understand the context, refine the idea, present a
-design, and get your human partner's approval.
+design, get your human partner's approval, and implement it.
 
 ## Establish Shared Understanding
 
@@ -43,16 +44,20 @@ selected path's prerequisites:
 
 - Spike: the human partner approves the question and probe.
 - Bounded: the human partner approves the short in-chat design.
-- Architectural: the human partner reviews and approves the written spec,
-  then reviews the written implementation plan and selects its execution
-  method. Conversational design approval only permits writing the spec;
-  written-spec approval only permits invoking writing-plans.
+- Architectural: the human partner reviews and approves the written spec.
+  Conversational design approval only permits writing the spec;
+  written-spec approval permits implementation.
 
 A reply approves the stage actually presented. Approval of an idea or
 feature scope does not approve artifacts that do not exist yet. Resume
 at the earliest incomplete stage; do not turn one approval into permission
 to skip the rest of the selected path. Read-only project exploration is
 allowed while those prerequisites remain incomplete.
+
+Once the prerequisites are complete, the gate is open. Start
+implementing in your response to the approval. Do not write an
+implementation plan document, hand off to another workflow, or ask for
+a separate go-ahead.
 </HARD-GATE>
 
 ## Three Paths
@@ -81,7 +86,8 @@ override it:
 - **Architectural** — new projects, new subsystems, changes that
   restructure how components fit together or alter interfaces others
   depend on. Follow the full process: questions, approaches, sectioned
-  design, written spec, then the writing-plans skill.
+  design, written spec, then implementation straight from the approved
+  spec.
 
 When in doubt between two paths, take the heavier one. The ratchet is
 one-way: hidden complexity discovered mid-task upgrades the path —
@@ -92,20 +98,23 @@ stop, say so, and step up. Nothing downgrades mid-task.
 Every path ends with your human partner approving the required design
 before implementation. A bounded change may need only two sentences in
 chat. A new todo-list project is architectural and requires the written
-spec and planning handoffs. Scale the artifact to the selected path;
-complete that path's reviews before implementation.
+spec. Scale the artifact to the selected path; complete that path's
+reviews before implementation.
 
 ## Red Flags
 
 | Thought | Reality |
 |---------|---------|
-| "This is too simple to need a design" | Follow the selected path: a bounded change gets a short chat design; an architectural change gets the written spec and planning handoffs. |
+| "This is too simple to need a design" | Follow the selected path: a bounded change gets a short chat design; an architectural change gets the written spec. |
 | "I'll call it bounded and skip the spec" | Reaching for a label to skip work IS the doubt — take the heavier path. |
 | "It's bounded and the design is obvious — I'll start while they read it" | The gate is the approval, not the design's length. Present, then stop until you hear yes. |
 | "I understand this kind of app, so it's bounded" | Bounded measures the repo, not your familiarity. A new project has no existing flow — it is architectural. |
 | "The spike works, so I'll keep the code" | A spike's output is an answer. Keeping the code is a new request — classify it. |
 | "It grew, but I'm almost done — no need to re-classify" | Hidden complexity upgrades the path mid-task. Stop and say so. |
 | "They approved the spike, so the follow-up change is approved too" | Each task gets its own classification and its own approval. |
+| "The spec is approved, so now I should write an implementation plan" | The approved spec is the plan. Start building; track steps in your todo list, not a new document. |
+| "I'll check they're ready for me to start" | Approving the design is the go-ahead. Start implementing. |
+| "The design doesn't quite work, but I'll adapt it as I go" | A change to what your partner approved goes back to them. Say what you found and propose the revision. |
 
 ## Checklist
 
@@ -124,7 +133,7 @@ your path and complete them in order.
 2. **Ask clarifying questions** — one at a time, the ones that matter
 3. **Present short design in chat** — approach, files touched, testing
 4. **Get approval** — STOP and wait for an explicit yes; presenting the design and starting in the same breath is skipping the gate
-5. **Implement** — proceed with the normal development workflow (TDD applies); no plan document
+5. **Implement** — build it straight from the approved design; no plan document (see Implementation below)
 
 **Architectural:**
 1. **Explore project context** — check files, docs, recent commits
@@ -132,10 +141,10 @@ your path and complete them in order.
 3. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
 4. **Propose 2-3 approaches** — with trade-offs and your recommendation
 5. **Present design** — in sections scaled to their complexity, get user approval after each section
-6. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
+6. **Write design doc** — save to `docs/specs/YYYY-MM-DD-<topic>-design.md` and commit
 7. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
 8. **User reviews written spec** — ask user to review the spec file before proceeding
-9. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+9. **Implement** — build it straight from the approved spec, in this session; no plan document (see Implementation below)
 
 ## Process Flow
 
@@ -147,7 +156,7 @@ digraph brainstorming {
     "Present short design in chat" [shape=box];
     "Human approves?" [shape=diamond];
     "Investigate; report recommendation" [shape=doublecircle];
-    "Implement via normal workflow (no plan doc)" [shape=doublecircle];
+    "Implement from the approved design" [shape=doublecircle];
     "Explore project context" [shape=box];
     "Ask clarifying questions" [shape=box];
     "Propose 2-3 approaches" [shape=box];
@@ -156,7 +165,7 @@ digraph brainstorming {
     "Write design doc" [shape=box];
     "Spec self-review\n(fix inline)" [shape=box];
     "User reviews spec?" [shape=diamond];
-    "Invoke writing-plans skill" [shape=doublecircle];
+    "Implement from the approved spec" [shape=doublecircle];
     "Hidden complexity? Upgrade path" [shape=box];
 
     "Classify: spike / bounded / architectural" -> "Present question + probe (2-3 sentences)" [label="spike"];
@@ -166,7 +175,7 @@ digraph brainstorming {
     "Ask clarifying questions (bounded)" -> "Present short design in chat";
     "Present short design in chat" -> "Human approves?";
     "Human approves?" -> "Investigate; report recommendation" [label="spike: yes"];
-    "Human approves?" -> "Implement via normal workflow (no plan doc)" [label="bounded: yes"];
+    "Human approves?" -> "Implement from the approved design" [label="bounded: yes"];
     "Hidden complexity? Upgrade path" -> "Classify: spike / bounded / architectural";
     "Explore project context" -> "Ask clarifying questions";
     "Ask clarifying questions" -> "Propose 2-3 approaches";
@@ -177,16 +186,16 @@ digraph brainstorming {
     "Write design doc" -> "Spec self-review\n(fix inline)";
     "Spec self-review\n(fix inline)" -> "User reviews spec?";
     "User reviews spec?" -> "Write design doc" [label="changes requested"];
-    "User reviews spec?" -> "Invoke writing-plans skill" [label="approved"];
+    "User reviews spec?" -> "Implement from the approved spec" [label="approved"];
 }
 ```
 
-**Terminal states are path-bound.** Architectural: the ONLY skill you
-invoke after brainstorming is writing-plans — never frontend-design,
-mcp-builder, or any other implementation skill. Bounded: after
-approval, implementation proceeds directly through the normal
-development workflow; no plan document. Spike: the terminal state is a
-reported recommendation.
+**Terminal states are path-bound.** Architectural and bounded: after
+approval, you implement the approved design yourself, in this session.
+There is no plan document and no separate execution workflow.
+Implementation skills (frontend-design, mcp-builder, and the like) are
+fine to use while building; they help carry out the design, they don't
+replace it. Spike: the terminal state is a reported recommendation.
 
 ## The Process
 
@@ -200,7 +209,7 @@ is the whole process.
 
 - Check out the current project state first (files, docs, recent commits)
 - Before asking detailed questions, assess scope: if the request describes multiple independent subsystems (e.g., "build a platform with chat, file storage, billing, and analytics"), flag this immediately. Don't spend questions refining details of a project that needs to be decomposed first.
-- If the project is too large for a single spec, help the user decompose into sub-projects: what are the independent pieces, how do they relate, what order should they be built? Then brainstorm the first sub-project through the normal design flow. Each sub-project gets its own spec → plan → implementation cycle.
+- If the project is too large for a single spec, help the user decompose into sub-projects: what are the independent pieces, how do they relate, what order should they be built? Then brainstorm the first sub-project through the normal design flow. Each sub-project gets its own spec → implementation cycle.
 - For appropriately-scoped projects, ask questions one at a time to refine the idea
 - Prefer multiple choice questions when possible, but open-ended is fine too
 - Only one question per message - if a topic needs more exploration, break it into multiple questions
@@ -238,9 +247,9 @@ is the whole process.
 
 **Documentation:**
 
-- Write the validated design (spec) to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
+- Write the validated design (spec) to `docs/specs/YYYY-MM-DD-<topic>-design.md`
   - (User preferences for spec location override this default)
-- Use elements-of-style:writing-clearly-and-concisely skill if available
+- Write it for the implementer (you, shortly): decisions and their reasons, interfaces, data flow, error handling, and how it will be tested. Skip step-by-step task lists; you'll sequence the work while building.
 - Commit the design document to git
 
 **Spec Self-Review:**
@@ -248,7 +257,7 @@ After writing the spec document, look at it with fresh eyes:
 
 1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, or vague requirements? Fix them.
 2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the feature descriptions?
-3. **Scope check:** Is this focused enough for a single implementation plan, or does it need decomposition?
+3. **Scope check:** Is this focused enough to implement as one piece of work, or does it need decomposition?
 4. **Ambiguity check:** Could any requirement be interpreted two different ways? If so, pick one and make it explicit.
 
 Fix any issues inline. No need to re-review — just fix and move on.
@@ -256,14 +265,38 @@ Fix any issues inline. No need to re-review — just fix and move on.
 **User Review Gate:**
 After the spec review loop passes, ask the user to review the written spec before proceeding:
 
-> "Spec written and committed to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
+> "Spec written and committed to `<path>`. Please review it and let me know if you want any changes. Once you approve it, I'll start building."
 
-Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
+Wait for the user's response. If they request changes, make them and re-run the spec review loop. Once the user approves, start implementing in that same response.
 
-**Implementation:**
+## Implementation
 
-- Invoke the writing-plans skill to create a detailed implementation plan
-- Do NOT invoke any other skill. writing-plans is the next step.
+Brainstorming ends when your human partner approves the design, and
+you build it in the same session. The approved spec (or the in-chat
+design, for bounded work) is the plan.
+
+- **Start right away.** The approval is the go-ahead. Don't restate the
+  design or ask whether to begin.
+- **Work from the design, not from memory.** Break it into tasks with
+  your todo list. For architectural work, reread the spec as you go.
+  After a long stretch of work, go back to it and check you're still
+  building what was agreed.
+- **Follow the project's conventions** for structure, tests, builds,
+  and commits. Where the project has tests, write them alongside the
+  code and run them.
+- **Verify before you claim done.** Run the tests, the build, or the
+  app, and read the output. Report what you verified and what you
+  couldn't.
+- **Small calls are yours; changes to the design are not.** Decide
+  local details the design didn't cover and note them in your summary.
+  If you find that the approved design is wrong or incomplete (a
+  constraint it missed, an approach that doesn't work), stop and bring
+  it to your human partner with a proposed revision. For architectural
+  work, update the spec once they agree.
+- **Hidden complexity still upgrades the path.** If a bounded task turns
+  out to be architectural while you're building it, stop and say so.
+- **Finish with a summary:** what you built, how you verified it, and
+  any decisions you made along the way.
 
 ## Visual Companion
 

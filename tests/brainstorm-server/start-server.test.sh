@@ -74,7 +74,7 @@ else
        "expected exact --brainstorm-server-id=<safe id> argv line, got: $captured"
 fi
 
-server_id_file=$(find "$TEST_DIR/project/.superpowers/brainstorm" -name server-instance-id -print 2>/dev/null | head -1)
+server_id_file=$(find "$TEST_DIR/project/.superbrainstorming/brainstorm" -name server-instance-id -print 2>/dev/null | head -1)
 server_id_value=""
 if [[ -n "$server_id_file" ]]; then
   server_id_value="$(tr -d '\r\n' < "$server_id_file")"

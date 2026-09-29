@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SessionStart hook for superpowers plugin
+# SessionStart hook for the superbrainstorming plugin
 
 set -euo pipefail
 
@@ -7,8 +7,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-# Read using-superpowers content
-using_superpowers_content=$(cat "${PLUGIN_ROOT}/skills/using-superpowers/SKILL.md" 2>&1 || echo "Error reading using-superpowers skill")
+# Read the bootstrap instructions
+bootstrap_content=$(cat "${PLUGIN_ROOT}/hooks/bootstrap.md" 2>&1 || echo "Error reading superbrainstorming bootstrap")
 
 # Escape string for JSON embedding using bash parameter substitution.
 # Each ${s//old/new} is a single C-level pass - orders of magnitude
@@ -23,8 +23,8 @@ escape_for_json() {
     printf '%s' "$s"
 }
 
-using_superpowers_escaped=$(escape_for_json "$using_superpowers_content")
-session_context="<EXTREMELY_IMPORTANT>\nYou have superpowers.\n\n**Below is the full content of your 'superpowers:using-superpowers' skill - your introduction to using skills. For all other skills, use the 'Skill' tool:**\n\n${using_superpowers_escaped}\n</EXTREMELY_IMPORTANT>"
+bootstrap_escaped=$(escape_for_json "$bootstrap_content")
+session_context="<superbrainstorming>\n${bootstrap_escaped}\n</superbrainstorming>"
 
 # Output context injection as JSON.
 # Cursor hooks expect additional_context (snake_case).

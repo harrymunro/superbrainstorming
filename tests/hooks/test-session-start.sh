@@ -206,14 +206,13 @@ assert_command_output \
     CLAUDE_PLUGIN_ROOT="$REPO_ROOT" \
     bash "$HOOK_UNDER_TEST"
 
-legacy_home="$(make_home legacy-warning-removed)"
-mkdir -p "$legacy_home/.config/superpowers/skills"
+bootstrap_home="$(make_home bootstrap-content)"
 assert_command_output \
-    "SessionStart omits obsolete legacy custom-skill warning" \
+    "SessionStart injects the superbrainstorming bootstrap" \
     "nested" \
-    "" \
-    "Superpowers now uses"$'\037'"~/.config/superpowers/skills"$'\037'"~/.claude/skills"$'\037'"legacy" \
-    "$legacy_home" \
+    "superbrainstorming:brainstorming" \
+    "using-superpowers"$'\037'"writing-plans"$'\037'"Error reading" \
+    "$bootstrap_home" \
     CLAUDE_PLUGIN_ROOT="$REPO_ROOT" \
     bash "$HOOK_UNDER_TEST"
 

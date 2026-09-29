@@ -1,19 +1,5 @@
 .worktrees/
-.private-journal/
 .claude/
-.superpowers/
+.superbrainstorming/
 .DS_Store
 node_modules/
-inspo
-triage/
-
-# Eval harness lives in its own repository, cloned into evals/ for local
-# development (see CLAUDE.md / README.md). It is not part of the published
-# plugin, so the whole directory is ignored here.
-evals/
-
-# Python
-__pycache__/
-*.pyc
-*.pyo
-.pytest_cache/
