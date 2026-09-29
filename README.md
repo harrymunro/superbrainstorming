@@ -1,34 +1,42 @@
 # Superbrainstorming
 
-Brainstorm the design with your coding agent, agree on it, then let the agent build it.
+Talk through the design with your coding agent, agree on it, then let the agent build it.
 
-Superbrainstorming is a fork of [Superpowers](https://github.com/obra/superpowers) by Jesse Vincent and [Prime Radiant](https://primeradiant.com). It keeps the brainstorming step and removes everything that came after it. When brainstorming is finished and you've approved the design, the agent starts implementing in the same session. There's no implementation plan document, subagent relay, or separate execution workflow.
+Superbrainstorming is a plugin for Claude Code. When you ask your agent to build something, it asks you a few questions first, shows you a design, and waits for your OK. As soon as you approve, it starts building in the same session.
 
-## Why only brainstorming?
+```mermaid
+flowchart LR
+    ask["You ask for something"] --> design["Agent asks questions<br/>and proposes a design"]
+    design --> approve{"You approve?"}
+    approve -->|Not yet| design
+    approve -->|Yes| build["Agent builds it"]
+```
 
-Superpowers is a complete methodology: brainstorm a design, turn it into a detailed implementation plan, then execute the plan task by task through fresh subagents with test-driven development and code review at each step. That pipeline was built for the models of its time. The plan was written to be, in the upstream README's words, "clear enough for an enthusiastic junior engineer with poor taste, no judgement, no project context, and an aversion to testing to follow." Handing each task to a fresh subagent kept every unit of work small enough for the model to stay on track.
+## Why?
 
-Current frontier models, such as Claude Opus 5.5, Claude Sonnet 5.5 and Claude Fable 5.1, can hold an approved design in context, break it into steps themselves, write and run tests as they go, and work for long stretches without drifting from what was agreed. For them, a written plan that restates the spec as bite-sized tasks mostly adds tokens and wall-clock time, and passing work between subagents adds hand-offs where context gets lost.
+Coding agents are good at building things. They can't know what you meant, who it's for, or which trade-offs you care about until someone asks, so a capable agent can still build the wrong thing, and build it well. Superbrainstorming has the agent check with you before it writes any code.
 
-Better models haven't fixed misunderstanding. They can still build the wrong thing, and build it well. The agent can't know what you meant, who it's for, or which trade-offs you care about until someone asks. Brainstorming is the part of Superpowers that deals with that, so it's the part this fork keeps.
+It's a fork of [Superpowers](https://github.com/obra/superpowers) by Jesse Vincent and Prime Radiant. Superpowers is a full workflow: brainstorm a design, write a detailed plan, then hand each task to a fresh subagent with test-driven development and code review at every step. That structure helped earlier models stay on track. Current models like Claude Opus 5.5, Sonnet 5.5 and Fable 5.1 can keep an agreed design in context and work through it on their own, so this fork keeps the brainstorming and drops the rest.
 
 ## How it works
 
-When you ask your agent to build something, the `brainstorming` skill takes over before any code is written.
+First, the agent makes sure it understands what you're after: what you want to achieve, who it's for, and what "done" looks like. It writes that back to you so you can correct it.
 
-1. **Classify the work.** The agent says out loud which of three paths it's taking, so you can override it:
-   - **Spike**: a feasibility question. The agent proposes a quick probe, gets a nod, and reports back a recommendation. Anything it builds is throwaway.
-   - **Bounded**: a well-scoped change to code that already exists, like a new flag, a small endpoint or a one-file fix. The agent asks the questions that matter and presents a short design in chat.
-   - **Architectural**: new projects, new subsystems, or changes to how components fit together. The agent asks questions one at a time, proposes two or three approaches with a recommendation, presents the design section by section, and writes a spec to `docs/specs/YYYY-MM-DD-<topic>-design.md`.
-2. **Establish shared understanding.** The agent works out what you're trying to achieve, who it's for and what success looks like, then writes that back to you so you can correct it before any design work starts.
-3. **Get approval.** Nothing gets built until you approve the design: a nod for a spike, a "yes" to the in-chat design for bounded work, or approval of the written spec for architectural work.
-4. **Build it.** Your approval is the go-ahead. The agent implements straight from the approved design in the same session, tracks its own steps, follows your project's conventions for tests and commits, and checks its work before calling it done. If it finds the design was wrong, it stops and brings you a proposed revision instead of quietly changing course. It finishes with a summary of what it built, how it verified it, and any decisions it made along the way.
+Then it picks one of three paths based on the size of the job, and tells you which one so you can overrule it:
 
-If you tell the agent to skip the design and just build, it will.
+| Path | For | What happens |
+|---|---|---|
+| **Spike** | "Is this even possible?" questions | The agent suggests a quick experiment, you give it a nod, and it reports back what it found. Anything it builds is throwaway. |
+| **Bounded** | Small, well-scoped changes to existing code | The agent asks what matters and shows you a short design in chat. |
+| **Architectural** | New projects, new subsystems, big structural changes | The agent asks questions one at a time, suggests two or three approaches, and writes a spec to `docs/specs/`. |
 
-## Installation
+Whichever path it takes, nothing gets built until you approve. Once you do, the agent gets started right away. It tracks its own steps, follows your project's conventions for tests and commits, and checks its work before calling it done. If it finds a problem with the design partway through, it stops and asks you instead of quietly changing course. When it's finished, you get a summary of what it built and how it checked it.
 
-Superbrainstorming is a Claude Code plugin. In Claude Code:
+If you'd rather skip the design and just build, say so and the agent will.
+
+## Install
+
+In Claude Code, run:
 
 ```bash
 /plugin marketplace add harrymunro/superbrainstorming
@@ -37,59 +45,66 @@ Superbrainstorming is a Claude Code plugin. In Claude Code:
 
 Then start a new session.
 
-If you also have Superpowers installed, disable or uninstall it through `/plugin` first. Both plugins provide a `brainstorming` skill and a session-start hook, and Superpowers' version hands off to its planning workflow instead of implementing.
+> **Already using Superpowers?** Disable or uninstall it through `/plugin` first. Both plugins have a `brainstorming` skill and a session-start hook, and Superpowers' version moves on to writing a plan instead of building.
 
-**Check it works:** in a fresh session, send `Let's make a react todo list`. The agent should invoke `superbrainstorming:brainstorming`, say that it's treating this as architectural, and ask you what the app is for before it writes any code.
+**Try it out:** in a fresh session, send `Let's make a react todo list`. The agent should load the `superbrainstorming:brainstorming` skill, say it's treating this as architectural work, and ask what the app is for before writing any code.
 
-### Other agents
+### Using another agent?
 
-The skill is a standard `SKILL.md` in `skills/brainstorming/`, so any agent that supports Agent Skills can load it. Without the session-start hook it may not trigger on its own, so ask for it by name. Upstream Superpowers ships integrations for many other harnesses if you want to port one.
+The skill is a standard `SKILL.md` in `skills/brainstorming/`, so any agent that supports Agent Skills can load it. Without the session-start hook it may not kick in on its own, so ask for it by name. Superpowers has integrations for many other tools if you want to port one.
 
-## What's inside
+## Visual companion
 
-- **`skills/brainstorming/`**: the skill, plus the optional visual companion.
-- **`hooks/`**: a session-start hook that injects `hooks/bootstrap.md`, a short note that tells the agent to brainstorm before building and to build once the design is approved.
+Some questions are easier to answer by looking, like layouts, mockups or diagrams. For those, the agent can offer to open a tab in your browser and show you options there. It's opt-in, needs Node.js, and runs entirely on your machine without loading anything from the internet. Mockups are saved in `.superbrainstorming/` in your project, so add that to your `.gitignore`.
 
-### Visual companion
+## Superbrainstorming or Superpowers?
 
-When a question is easier to answer by seeing it (layouts, mockups, diagrams), the agent can offer to open a local browser tab and show you options there. It's opt-in per session and needs Node.js. It runs entirely on your machine and loads nothing from remote hosts. Mockups are saved under `.superbrainstorming/` in your project, so add that to your `.gitignore`.
+Pick **Superbrainstorming** if you're using a current frontier model and want a quick design check before the agent gets to work.
 
-## What changed from Superpowers
+Pick **[Superpowers](https://github.com/obra/superpowers)** if you're using smaller or older models, or you want enforced TDD, per-task code review and git worktree management. Its extra structure is there for good reasons, and they still hold for models that need it.
+
+<details>
+<summary>Everything that changed from Superpowers</summary>
 
 **Kept**
-- The `brainstorming` skill: the three-path router, the approval gate, one-question-at-a-time design, spec self-review and the visual companion.
+- The `brainstorming` skill: the three paths, the approval gate, one-question-at-a-time design, spec self-review and the visual companion.
 - The Claude Code session-start hook.
 
 **Changed**
-- Brainstorming now ends in implementation. Approving the design (or, for architectural work, the written spec) starts the build. Upstream, it started the `writing-plans` skill.
-- The bootstrap is a short, plain note. It replaces the `using-superpowers` skill, which used emphatic all-caps rules to make sure models followed it.
+- Approving the design (or, for architectural work, the written spec) starts the build. Upstream, it moved on to the `writing-plans` skill.
+- The session-start note is short and plain. It replaces the `using-superpowers` skill, which relied on emphatic all-caps rules.
 - Specs go to `docs/specs/` instead of `docs/superpowers/specs/`.
-- The visual companion shows plain text branding and no longer loads the Prime Radiant logo, which upstream uses as usage telemetry.
+- The visual companion uses plain text branding and no longer loads the Prime Radiant logo, which upstream uses for usage telemetry.
 
 **Removed**
 - Skills: `writing-plans`, `executing-plans`, `subagent-driven-development`, `test-driven-development`, `systematic-debugging`, `verification-before-completion`, `requesting-code-review`, `receiving-code-review`, `using-git-worktrees`, `finishing-a-development-branch`, `dispatching-parallel-agents`, `writing-skills`, `diagnosing-superpowers` and `using-superpowers`.
-- Integrations for harnesses other than Claude Code (Codex, Cursor, Gemini, OpenCode, Pi, Hermes, Kimi, Devin, Muse and others), along with their tests and packaging scripts.
+- Integrations for tools other than Claude Code (Codex, Cursor, Gemini, OpenCode, Pi, Hermes, Kimi, Devin, Muse and others), along with their tests and packaging scripts.
 - Upstream's design docs, release notes and community files.
 
-### When to use Superpowers instead
+</details>
 
-If you're working with smaller or older models, or you want enforced TDD, per-task code review and git worktree management, use [Superpowers](https://github.com/obra/superpowers). Its extra structure is there for good reasons, and those reasons still hold for models that need it.
+## What's in this repo
 
-## Development
+- `skills/brainstorming/`: the skill and the optional visual companion.
+- `hooks/`: a session-start hook that reminds the agent to brainstorm before building, and to build once you've approved the design.
+
+## Contributing
+
+Run the tests with:
 
 ```bash
-# Visual companion server tests
+# Visual companion server
 cd tests/brainstorm-server && npm ci && npm test
 
-# Session-start hook tests
+# Session-start hook
 bash tests/hooks/test-session-start.sh
 ```
 
-Changes to `skills/brainstorming/SKILL.md` or `hooks/bootstrap.md` change agent behavior. Try them in real sessions before merging: at least the `Let's make a react todo list` check above, plus a bounded change to an existing repo.
+Changes to `skills/brainstorming/SKILL.md` or `hooks/bootstrap.md` change how the agent behaves, so try them in real sessions before merging. [AGENTS.md](AGENTS.md) lists the checks to run.
 
 ## Credits
 
-Superbrainstorming is derived from [Superpowers](https://github.com/obra/superpowers), created by [Jesse Vincent](https://blog.fsck.com) and the team at Prime Radiant. The brainstorming skill and visual companion are their work, and the full upstream git history is preserved in this repository. Please report problems with this fork here, not upstream.
+Superbrainstorming is built on [Superpowers](https://github.com/obra/superpowers), created by [Jesse Vincent](https://blog.fsck.com) and the team at [Prime Radiant](https://primeradiant.com). The brainstorming skill and visual companion are their work, and the full upstream git history is kept in this repo. Please report problems with this fork here, not upstream.
 
 ## License
 
