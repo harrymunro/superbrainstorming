@@ -37,3 +37,31 @@ bash tests/hooks/test-session-start.sh
 ## Upstream
 
 Don't open PRs against `obra/superpowers` with changes from this fork. If you fix something in the shared visual companion code that affects upstream too, open a separate, upstream-shaped PR following their `AGENTS.md`.
+
+## Session notes (Obsidian vault)
+
+Persistent prose (session notes, decisions, research) lives in Harry's vault
+at `/Users/harry/Documents/Obsidian Vault`, project folder `Business/Superbrainstorming/`, index `Superbrainstorming MOC.md`. The
+repo keeps code and its docs; the vault keeps what should outlive a session.
+
+- **Confidentiality**: the vault holds notes for other clients and private
+  notes. Never read, list, search or write outside `Business/Superbrainstorming/`. Scope
+  every `obsidian` CLI call with `path=` or `folder=`; vault-wide commands
+  (`search` without `path=`, `files` without `folder=`, `properties`,
+  `orphans`, `deadends`, `recents`, `random`, `bases`, `daily:*`) are
+  forbidden here.
+- **Start**: read `Superbrainstorming Session Log.md` for continuity; open a note under
+  `Sessions/` only when you need the detail. If the folder or log does not
+  exist yet, create `Superbrainstorming MOC.md` and `Superbrainstorming Session Log.md` (a table of date,
+  note and summary, newest row first).
+- **Finding past context**: use the `vault-search` skill (`vault-search
+  "<question>"`) before reading or grepping notes by hand. It is scoped to
+  this folder by `.claude/vault-search.toml` and ranks passages with Jev
+  (Harry's decision; never edit that file).
+- **End**: write `Sessions/YYYY-MM-DD<letter>-topic.md` and add a one-line row
+  at the top of the table in `Superbrainstorming Session Log.md`. Frontmatter: `project:
+  Superbrainstorming`, `source: claude`, `date: YYYY-MM-DD`, `type:
+  session|meeting|decision|research|note`, `summary: <one line>`. Link new
+  evergreen notes from `Superbrainstorming MOC.md`.
+- The `obsidian` CLI needs the app running; if it errors, read and write the
+  files directly under the same folder.
